@@ -37,6 +37,9 @@ addpkg usbutils
 addpkg lightdm-gtk-greeter
 addpkg xdg-desktop-portal-gtk
 
+addpkg libappindicator-gtk2
+addpkg libappindicator-gtk3
+
 addpkg instantos
 addpkg instantdepend
 addpkg liveutils
