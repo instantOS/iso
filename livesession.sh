@@ -28,21 +28,8 @@ cd
 mkdir tmparch
 cd tmparch
 
-pacman-key --init
-
-sudo pacman -Sy --noconfirm git wget
 git clone --depth 1 https://github.com/instantOS/instantARCH
 git clone --depth 1 https://github.com/instantOS/instantOS
-
-bash instantARCH/depend/depend.sh
-bash instantARCH/depend/system.sh
-bash instantOS/repo.sh
-
-# install instantOS packages
-sudo pacman -Sy --noconfirm instantos
-sudo pacman -Sy --noconfirm instantdepend
-# declare as live session
-sudo pacman -Sy --noconfirm liveutils
 
 echo "instantOS rootinstall"
 bash instantOS/rootinstall.sh
