@@ -14,8 +14,8 @@ useradd -m -s /bin/bash instantos
 echo "instantos:instantos" | chpasswd
 
 rgroup() {
-    groupadd "$1" &>/dev/null
-    sudo gpasswd -a "instantos" "$1"
+    groupadd "$1"
+    gpasswd -a "instantos" "$1"
 }
 
 rgroup "autologin"

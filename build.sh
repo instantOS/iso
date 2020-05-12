@@ -28,8 +28,11 @@ echo "Server = http://instantos.surge.sh" >>pacman.conf
 cat ~/.cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
 
 addpkg() {
-    echo "$1" >>packages.x86_64
+    echo "$1" >>~/instantlive/packages.x86_64
 }
+
+cd
+cd instantlive
 
 addpkg xorg
 addpkg fzf
@@ -58,4 +61,4 @@ addpkg instantos
 addpkg instantdepend
 addpkg liveutils
 
-sudo ./build.sh
+sudo ./build.sh -v
