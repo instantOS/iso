@@ -18,6 +18,8 @@ else
     git clone --depth 1 https://github.com/instantOS/iso
 fi
 
+cd
+
 cd instantlive
 echo "[instant]" >>pacman.conf
 echo "SigLevel = Optional TrustAll" >>pacman.conf
