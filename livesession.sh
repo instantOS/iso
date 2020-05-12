@@ -52,6 +52,8 @@ rm /opt/livebuilder
 
 systemctl enable lightdm
 
+echo "sleep 2 && systemctl start lightdm" >> /root/.zshrc
+
 cd
 rm -rf tmparch
 
