@@ -14,7 +14,10 @@ useradd -m -s /bin/bash instantos
 echo "instantos:instantos" | chpasswd
 
 rgroup() {
-    groupadd "$1"
+    if ! grep -q "$1" /etc/group; then
+        groupadd "$1"
+    fi
+
     gpasswd -a "instantos" "$1"
 }
 

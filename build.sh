@@ -27,6 +27,8 @@ echo "Server = http://instantos.surge.sh" >>pacman.conf
 
 cat ~/.cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
 
+echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>airootfs/root/.zlogin
+
 addpkg() {
     echo "$1" >>~/instantlive/packages.x86_64
 }
