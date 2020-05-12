@@ -52,7 +52,8 @@ rm /opt/livebuilder
 
 systemctl enable lightdm
 
-echo "sleep 2 && systemctl start lightdm" >> /root/.zshrc
+echo "sleep 2 && systemctl start lightdm" >>/root/.zshrc
+echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>/etc/zsh/zshrc
 
 cd
 rm -rf tmparch

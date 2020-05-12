@@ -4,15 +4,27 @@ echo "starting build of instantOS live iso"
 
 cd
 [ -e instantlive ] && echo "removing existing iso" && sudo rm -rf instantlive
+sleep 1
 
 cp -r /usr/share/archiso/configs/releng/ instantlive
+
+mkdir .cache &>/dev/null
+cd .cache
+if [ -e iso/livesession.sh ]; then
+    cd iso
+    git pull
+    cd ..
+else
+    git clone --depth 1 https://github.com/instantOS/iso
+fi
 
 cd instantlive
 echo "[instant]" >>pacman.conf
 echo "SigLevel = Optional TrustAll" >>pacman.conf
 echo "Server = http://instantos.surge.sh" >>pacman.conf
 
-echo "curl -Ls bit.ly/02instantoslive | bash" >>airootfs/root/customize_airootfs.sh
+cat ~/.cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
+
 addpkg() {
     echo "$1" >>packages.x86_64
 }
