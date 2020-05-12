@@ -4,7 +4,9 @@ echo "starting build of instantOS live iso"
 
 cd
 [ -e instantlive ] && echo "removing existing iso" && sudo rm -rf instantlive
-cp -r /usr/share/archiro/configs/releng/ instantlive
+
+cp -r /usr/share/archiso/configs/releng/ instantlive
+
 cd instantlive
 echo "[instant]" >>pacman.conf
 echo "SigLevel = Optional TrustAll" >>pacman.conf
