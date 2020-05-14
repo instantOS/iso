@@ -51,6 +51,8 @@ sed -i 's/# %wheel/%wheel/g' /etc/sudoers
 echo "root ALL=(ALL) NOPASSWD:ALL #instantosroot" >>/etc/sudoers
 echo "" >>/etc/sudoers
 
+echo 'GRUB_THEME="/usr/share/grub/themes/instantos/theme.txt"' >>/etc/default/grub
+
 rm /opt/livebuilder
 
 systemctl enable lightdm
