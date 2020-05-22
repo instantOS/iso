@@ -26,11 +26,12 @@ if ! uname -m | grep -q '^i'; then
     echo "[instant]" >>pacman.conf
     echo "SigLevel = Optional TrustAll" >>pacman.conf
     echo "Server = http://instantos.surge.sh" >>pacman.conf
-    sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist32
 else
     echo "[instant]" >>pacman.conf
     echo "SigLevel = Optional TrustAll" >>pacman.conf
     echo "Server = http://instantos32.surge.sh" >>pacman.conf
+    sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist32
+
 fi
 
 cat ~/.cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
