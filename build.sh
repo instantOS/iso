@@ -46,6 +46,7 @@ cd
 cd instantlive
 
 addpkg xorg
+addpkg xorg-drivers
 addpkg fzf
 addpkg expect
 addpkg git
