@@ -54,6 +54,7 @@ addpkg dialog
 addpkg wget
 
 addpkg sudo
+addpkg lshw
 addpkg lightdm
 addpkg bash
 addpkg vim
