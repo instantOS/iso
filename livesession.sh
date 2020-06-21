@@ -55,7 +55,7 @@ echo 'GRUB_THEME="/usr/share/grub/themes/instantos/theme.txt"' >>/etc/default/gr
 
 rm /opt/livebuilder
 
-systemctl enable lightdm
+# systemctl enable lightdm
 
 echo "sleep 2 && systemctl start lightdm" >>/root/.zshrc
 echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>/etc/zsh/zshrc
