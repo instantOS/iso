@@ -74,4 +74,13 @@ addpkg instantos
 addpkg instantdepend
 addpkg liveutils
 
+if ! [ -e ~/workspace/instantARCH ]; then
+    mkdir ~/workspace/
+    git clone --depth 1 https://github.com/instantOS/instantARCH ~/workspace/instantARCH
+fi
+
+sed -n '/begin/,/end/p' ~/workspace/instantARCH/depend/system.sh |
+    grep '^[^a-z#]' | grep -v 'install end' | grep -o '[^ \\]*' > \
+    ~/instantlive/packages.x86_64
+
 sudo ./build.sh -v
