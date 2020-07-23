@@ -62,6 +62,7 @@ addpkg xterm
 addpkg systemd-swap
 addpkg neofetch
 addpkg pulseaudio
+addpkg netctl
 addpkg alsa-utils
 addpkg usbutils
 addpkg lightdm-gtk-greeter
