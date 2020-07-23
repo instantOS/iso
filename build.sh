@@ -23,9 +23,11 @@ cd instantlive
 
 # default is 64 bit repo
 if ! uname -m | grep -q '^i'; then
+    echo "adding 64 bit repo"
     echo "[instant]" >>pacman.conf
     echo "SigLevel = Optional TrustAll" >>pacman.conf
     echo "Server = http://instantos.surge.sh" >>pacman.conf
+
 else
     echo "[instant]" >>pacman.conf
     echo "SigLevel = Optional TrustAll" >>pacman.conf
@@ -58,6 +60,8 @@ addpkg lshw
 addpkg lightdm
 addpkg bash
 addpkg mkinitcpio
+addpkg base
+addpkg linux
 addpkg vim
 addpkg xterm
 addpkg systemd-swap
