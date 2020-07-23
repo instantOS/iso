@@ -57,6 +57,7 @@ addpkg sudo
 addpkg lshw
 addpkg lightdm
 addpkg bash
+addpkg mkinitcpio
 addpkg vim
 addpkg xterm
 addpkg systemd-swap
