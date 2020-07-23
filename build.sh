@@ -87,7 +87,7 @@ if ! [ -e ~/workspace/instantARCH ]; then
 fi
 
 sed -n '/begin/,/end/p' ~/workspace/instantARCH/depend/system.sh |
-    grep '^[^a-z#]' | grep -v 'install end' | grep -o '[^ \\]*' > \
+    grep '^[^a-z#]' | grep -v 'install end' | grep -o '[^ \\]*' >> \
     ~/instantlive/packages.x86_64
 
 sudo ./build.sh -v
