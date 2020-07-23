@@ -27,6 +27,9 @@ rgroup "video"
 rgroup "wheel"
 rgroup "input"
 
+mkdir -p /etc/instantos
+curl -s https://raw.githubusercontent.com/instantOS/iso/master/version >/etc/instantos/liveversion
+
 cd
 mkdir tmparch
 cd tmparch
