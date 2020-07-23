@@ -60,7 +60,6 @@ addpkg lshw
 addpkg lightdm
 addpkg bash
 addpkg mkinitcpio
-addpkg core
 addpkg base
 addpkg linux
 addpkg vim
