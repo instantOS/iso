@@ -63,6 +63,7 @@ addpkg mkinitcpio
 addpkg base
 addpkg linux
 addpkg vim
+addpkg xarchiver
 addpkg xterm
 addpkg systemd-swap
 addpkg neofetch
@@ -75,6 +76,8 @@ addpkg xdg-desktop-portal-gtk
 
 addpkg libappindicator-gtk2
 addpkg libappindicator-gtk3
+
+addpkg snap-dummy
 
 addpkg instantos
 addpkg instantdepend
