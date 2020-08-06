@@ -19,7 +19,7 @@ else
 fi
 
 cd
-cd instantlive
+cd instantlive || exit 1
 
 # default is 64 bit repo
 if ! uname -m | grep -q '^i'; then
@@ -62,6 +62,7 @@ addpkg bash
 addpkg mkinitcpio
 addpkg base
 addpkg linux
+addpkg gparted
 addpkg vim
 addpkg xarchiver
 addpkg xterm
@@ -82,6 +83,18 @@ addpkg snap-dummy
 addpkg instantos
 addpkg instantdepend
 addpkg liveutils
+
+# syslinux theme
+cd syslinux || exit 1
+sed -i 's/Arch/instantOS/g' ./*.cfg
+rm splash.png
+if ! [ -e ~/workspace/instantLOGO ]; then
+    mkdir ~/workspace
+    git clone --depth 1 https://github.com/instantOS/instantLOGO ~/workspace/instantLOGO
+fi
+cp ~/workspace/instantLOGO/png/splash.png .
+cd .. || exit 1
+
 
 if ! [ -e ~/workspace/instantARCH ]; then
     mkdir ~/workspace/
