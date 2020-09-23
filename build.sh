@@ -87,6 +87,8 @@ addpkg liveutils
 # syslinux theme
 cd syslinux || exit 1
 sed -i 's/Arch/instantOS/g' ./*.cfg
+sed -i 's/^TIMEOUT [0-9]*/TIMEOUT 0/g' ./*.cfg
+
 rm splash.png
 if ! [ -e ~/workspace/instantLOGO ]; then
     mkdir ~/workspace
