@@ -2,23 +2,23 @@
 
 echo "starting build of instantOS live iso"
 
-cd
+cd || exit 1
 [ -e instantlive ] && echo "removing existing iso" && sudo rm -rf instantlive
 sleep 1
 
 cp -r /usr/share/archiso/configs/releng/ instantlive
 
 mkdir .cache &>/dev/null
-cd .cache
+cd .cache || exit 1
 if [ -e iso/livesession.sh ]; then
-    cd iso
+    cd iso || exit 1
     git pull
-    cd ..
+    cd .. || exit 1
 else
     git clone --depth 1 https://github.com/instantOS/iso
 fi
 
-cd
+cd || exit 1
 cd instantlive || exit 1
 
 # default is 64 bit repo
@@ -26,7 +26,7 @@ if ! uname -m | grep -q '^i'; then
     echo "adding 64 bit repo"
     echo "[instant]" >>pacman.conf
     echo "SigLevel = Optional TrustAll" >>pacman.conf
-    echo "Server = packages.instantos.io" >>pacman.conf
+    echo "Server = http://packages.instantos.io/" >>pacman.conf
 
 else
     echo "[instant]" >>pacman.conf
@@ -44,8 +44,8 @@ addpkg() {
     echo "$1" >>~/instantlive/packages.x86_64
 }
 
-cd
-cd instantlive
+cd || exit 1
+cd instantlive || exit 1
 
 addpkg xorg
 addpkg xorg-drivers
