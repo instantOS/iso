@@ -26,7 +26,7 @@ if ! uname -m | grep -q '^i'; then
     echo "adding 64 bit repo"
     echo "[instant]" >>pacman.conf
     echo "SigLevel = Optional TrustAll" >>pacman.conf
-    echo "Server = http://instantos.surge.sh" >>pacman.conf
+    echo "Server = packages.instantos.io" >>pacman.conf
 
 else
     echo "[instant]" >>pacman.conf
