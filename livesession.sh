@@ -30,9 +30,9 @@ rgroup "input"
 mkdir -p /etc/instantos
 curl -s https://raw.githubusercontent.com/instantOS/iso/master/version >/etc/instantos/liveversion
 
-cd
+cd || exit 1
 mkdir tmparch
-cd tmparch
+cd tmparch || exit 1
 
 git clone --depth 1 https://github.com/instantOS/instantARCH
 git clone --depth 1 https://github.com/instantOS/instantOS
@@ -66,7 +66,10 @@ rm /opt/livebuilder
 echo "sleep 2 && systemctl start lightdm" >>/root/.zshrc
 echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>/etc/zsh/zshrc
 
-cd
+# install dev tools
+curl -s 'https://raw.githubusercontent.com/instantOS/instantTOOLS/master/netinstall.sh' | bash
+
+cd || exit 1
 rm -rf tmparch
 
 echo "finished building instantOS installation ISO"

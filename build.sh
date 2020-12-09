@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# produce an installation iso for instantOS
+# run this on an instantOS installation
+# Depending on your setup might also work on Arch or Manjaro
+
 echo "starting build of instantOS live iso"
 
 cd || exit 1
@@ -108,3 +112,5 @@ sed -n '/begin/,/end/p' ~/workspace/instantARCH/depend/system.sh |
     ~/instantlive/packages.x86_64
 
 sudo mkarchiso -v "$(realpath .)"
+
+echo "finished building instantOS installation iso"
