@@ -82,8 +82,6 @@ addpkg xdg-desktop-portal-gtk
 addpkg libappindicator-gtk2
 addpkg libappindicator-gtk3
 
-addpkg snap-dummy
-
 addpkg instantos
 addpkg instantdepend
 addpkg liveutils
