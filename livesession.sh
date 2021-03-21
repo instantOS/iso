@@ -9,7 +9,6 @@ echo "building instantOS installation ISO"
 touch /opt/livebuilder
 
 echo "adding user"
-
 useradd -m -s /bin/bash instantos
 echo "instantos:instantos" | chpasswd
 

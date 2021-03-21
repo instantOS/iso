@@ -28,16 +28,18 @@ cd instantlive || exit 1
 # default is 64 bit repo
 if ! uname -m | grep -q '^i'; then
     echo "adding 64 bit repo"
-    echo "[instant]" >>pacman.conf
-    echo "SigLevel = Optional TrustAll" >>pacman.conf
-    echo "Server = http://packages.instantos.io/" >>pacman.conf
-
+    {
+        echo "[instant]"
+        echo "SigLevel = Optional TrustAll"
+        echo "Server = http://packages.instantos.io/"
+    } >>pacman.conf
 else
-    echo "[instant]" >>pacman.conf
-    echo "SigLevel = Optional TrustAll" >>pacman.conf
-    echo "Server = http://instantos32.surge.sh" >>pacman.conf
+    {
+        echo "[instant]"
+        echo "SigLevel = Optional TrustAll"
+        echo "Server = http://instantos32.surge.sh"
+    } >>pacman.conf
     sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist32
-
 fi
 
 cat ~/.cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
@@ -96,9 +98,9 @@ if ! [ -e ~/workspace/instantLOGO ]; then
     mkdir ~/workspace
     git clone --depth 1 https://github.com/instantOS/instantLOGO ~/workspace/instantLOGO
 fi
+
 cp ~/workspace/instantLOGO/png/splash.png .
 cd .. || exit 1
-
 
 if ! [ -e ~/workspace/instantARCH ]; then
     mkdir ~/workspace/
