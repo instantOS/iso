@@ -87,6 +87,7 @@ addpkg libappindicator-gtk3
 addpkg instantos
 addpkg instantdepend
 addpkg liveutils
+addpkg grub-instantos
 
 # syslinux theme
 cd syslinux || exit 1
