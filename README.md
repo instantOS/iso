@@ -2,6 +2,12 @@
 
 Tools for creating a live iso of instantOS
 
-## Usage
+## Building
 
-Run ./build.sh from an instantOS install
+```sh
+git clone https://github.com/instantOS/iso
+cd iso
+./build.sh
+```
+
+This needs to be run on an instantOS install
