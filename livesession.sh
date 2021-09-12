@@ -43,7 +43,7 @@ echo "instantOS rootinstall"
 bash instantOS/rootinstall.sh
 
 [ -e /etc/lightdm ] || mkdir -p /etc/lightdm
-cat /usr/share/instantdotfiles/lightdm-gtk-greeter.conf >/etc/lightdm/lightdm-gtk-greeter.conf
+cat /usr/share/instantdotfiles/rootconfig/lightdm-gtk-greeter.conf >/etc/lightdm/lightdm-gtk-greeter.conf
 
 echo "preparing lightdm"
 # enable greeter
