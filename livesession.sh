@@ -27,7 +27,7 @@ rgroup "wheel"
 rgroup "input"
 
 mkdir -p /etc/instantos
-curl -s https://raw.githubusercontent.com/instantOS/iso/master/version >/etc/instantos/liveversion
+curl -s https://raw.githubusercontent.com/instantOS/iso/main/version >/etc/instantos/liveversion
 
 cd || exit 1
 mkdir tmparch
@@ -66,7 +66,7 @@ echo "sleep 2 && systemctl start lightdm" >>/root/.zshrc
 echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>/etc/zsh/zshrc
 
 # install dev tools
-curl -s 'https://raw.githubusercontent.com/instantOS/instantTOOLS/master/netinstall.sh' | bash
+curl -s 'https://raw.githubusercontent.com/instantOS/instantTOOLS/main/netinstall.sh' | bash
 
 cd || exit 1
 rm -rf tmparch
