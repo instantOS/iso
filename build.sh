@@ -77,6 +77,7 @@ addpkg neofetch
 addpkg pulseaudio
 addpkg netctl
 addpkg alsa-utils
+addpkg tzupdate
 addpkg usbutils
 addpkg lightdm-gtk-greeter
 addpkg xdg-desktop-portal-gtk
@@ -94,6 +95,9 @@ cd syslinux || exit 1
 sed -i 's/Arch/instantOS/g' ./*.cfg
 sed -i 's/^TIMEOUT [0-9]*/TIMEOUT 0/g' ./*.cfg
 
+# custom menu styling
+cat ~/workspace/iso/syslinux/archiso_head.cfg > ./archiso_head.cfg
+
 rm splash.png
 if ! [ -e ~/workspace/instantLOGO ]; then
     mkdir ~/workspace
@@ -101,8 +105,13 @@ if ! [ -e ~/workspace/instantLOGO ]; then
 fi
 
 cp ~/workspace/instantLOGO/png/splash.png .
+
 cd .. || exit 1
 
+# end of syslinux styling
+
+
+# add installer
 if ! [ -e ~/workspace/instantARCH ]; then
     mkdir ~/workspace/
     git clone --depth 1 https://github.com/instantOS/instantARCH ~/workspace/instantARCH

@@ -4,6 +4,8 @@
 ## execute this script in a chroot of archiso to build an instantOS installation ISO ##
 #######################################################################################
 
+## This script is run on the live iso itself, NOT the host
+
 echo "building instantOS installation ISO"
 
 touch /opt/livebuilder
@@ -62,6 +64,9 @@ rm /opt/livebuilder
 
 # systemctl enable lightdm
 
+systemctl enable systemd-timesyncd.service
+
+echo "tzupdate &" >>/root/.zshrc
 echo "sleep 2 && systemctl start lightdm" >>/root/.zshrc
 echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>/etc/zsh/zshrc
 
