@@ -97,6 +97,8 @@ sed -i 's/^TIMEOUT [0-9]*/TIMEOUT 0/g' ./*.cfg
 
 # custom menu styling
 cat ~/workspace/iso/syslinux/archiso_head.cfg > ./archiso_head.cfg
+cat ~/workspace/iso/syslinux/archiso_pxe-linux.cfg > ./archiso_pxe-linux.cfg
+cat ~/workspace/iso/syslinux/archiso_sys-linux.cfg > ./archiso_sys-linux.cfg
 
 rm splash.png
 if ! [ -e ~/workspace/instantLOGO ]; then
