@@ -119,7 +119,7 @@ if ! [ -e ~/workspace/instantARCH ]; then
     git clone --depth 1 https://github.com/instantOS/instantARCH ~/workspace/instantARCH
 fi
 
-cat ~/workspace/instantARCH/depend/depends >> ~/instantlive/packages.x86_64
+cat ~/workspace/instantARCH/data/packages/system >> ~/instantlive/packages.x86_64
 
 sudo mkarchiso -v "$(realpath .)"
 
