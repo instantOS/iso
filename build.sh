@@ -119,9 +119,7 @@ if ! [ -e ~/workspace/instantARCH ]; then
     git clone --depth 1 https://github.com/instantOS/instantARCH ~/workspace/instantARCH
 fi
 
-sed -n '/begin/,/end/p' ~/workspace/instantARCH/depend/system.sh |
-    grep '^[^a-z#]' | grep -v 'install end' | grep -o '[^ \\]*' >> \
-    ~/instantlive/packages.x86_64
+cat ~/workspace/instantARCH/depend/depends >> ~/instantlive/packages.x86_64
 
 sudo mkarchiso -v "$(realpath .)"
 
