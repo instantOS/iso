@@ -5,25 +5,34 @@
 # Depending on your setup might also work on Arch or Manjaro
 
 echo "starting build of instantOS live iso"
+set -eo pipefail
 
-cd || exit 1
-[ -e instantlive ] && echo "removing existing iso" && sudo rm -rf instantlive
+instantinstall archiso
+
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+[ "$ISO_BUILD" ] || ISO_BUILD="$script_dir/build"
+echo "iso will be built in $ISO_BUILD"
+
+[ -e "$ISO_BUILD" ] && echo "removing existing iso" && sudo rm -rf "$ISO_BUILD"/ 
+mkdir -p "$ISO_BUILD"
+cd "$ISO_BUILD"
+
 sleep 1
 
 cp -r /usr/share/archiso/configs/releng/ instantlive
 
 mkdir .cache &>/dev/null
-cd .cache || exit 1
+cd .cache 
+
 if [ -e iso/livesession.sh ]; then
-    cd iso || exit 1
+    cd iso 
     git pull
-    cd .. || exit 1
+    cd .. 
 else
     git clone --depth 1 https://github.com/instantOS/iso
 fi
 
-cd || exit 1
-cd instantlive || exit 1
+cd "$ISO_BUILD/instantlive"
 
 # default is 64 bit repo
 if ! uname -m | grep -q '^i'; then
@@ -42,16 +51,15 @@ else
     sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist32
 fi
 
-cat ~/.cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
+cat .cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
 
 echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>airootfs/root/.zlogin
 
 addpkg() {
-    echo "$1" >>~/instantlive/packages.x86_64
+    echo "$1" >>./instantlive/packages.x86_64
 }
 
-cd || exit 1
-cd instantlive || exit 1
+cd "$ISO_BUILD/instantlive"
 
 addpkg xorg
 addpkg xorg-drivers
@@ -91,36 +99,38 @@ addpkg liveutils
 addpkg grub-instantos
 
 # syslinux theme
-cd syslinux || exit 1
+cd syslinux 
 sed -i 's/Arch/instantOS/g' ./*.cfg
 sed -i 's/^TIMEOUT [0-9]*/TIMEOUT 0/g' ./*.cfg
 
 # custom menu styling
-cat ~/workspace/iso/syslinux/archiso_head.cfg > ./archiso_head.cfg
-cat ~/workspace/iso/syslinux/archiso_pxe-linux.cfg > ./archiso_pxe-linux.cfg
-cat ~/workspace/iso/syslinux/archiso_sys-linux.cfg > ./archiso_sys-linux.cfg
+cat "$ISO_BUILD/../syslinux/archiso_head.cfg" > ./archiso_head.cfg
+cat "$ISO_BUILD/../syslinux/archiso_pxe-linux.cfg" > ./archiso_pxe-linux.cfg
+cat "$ISO_BUILD/../syslinux/archiso_sys-linux.cfg" > ./archiso_sys-linux.cfg
 
 rm splash.png
-if ! [ -e ~/workspace/instantLOGO ]; then
-    mkdir ~/workspace
-    git clone --depth 1 https://github.com/instantOS/instantLOGO ~/workspace/instantLOGO
+
+if ! [ -e "$ISO_BUILD/workspace/instantLOGO" ]; then
+    mkdir -p "$ISO_BUILD/workspace"
+    git clone --depth 1 https://github.com/instantOS/instantLOGO "$ISO_BUILD/workspace/instantLOGO"
 fi
 
-cp ~/workspace/instantLOGO/png/splash.png .
+cp "$ISO_BUILD/workspace/instantLOGO/png/splash.png" .
 
-cd .. || exit 1
+cd .. 
 
 # end of syslinux styling
 
 
 # add installer
-if ! [ -e ~/workspace/instantARCH ]; then
-    mkdir ~/workspace/
-    git clone --depth 1 https://github.com/instantOS/instantARCH ~/workspace/instantARCH
+if ! [ -e "$ISO_BUILD/workspace/instantARCH" ]; then
+    mkdir -p "$ISO_BUILD/workspace/"
+    git clone --depth 1 https://github.com/instantOS/instantARCH "$ISO_BUILD/workspace/instantARCH"
 fi
 
-cat ~/workspace/instantARCH/data/packages/system >> ~/instantlive/packages.x86_64
+cat "$ISO_BUILD"/workspace/instantARCH/data/packages/system >> ~/instantlive/packages.x86_64
+cat "$ISO_BUILD"/workspace/instantARCH/data/packages/extra >> ~/instantlive/packages.x86_64
 
-sudo mkarchiso -v "$(realpath .)"
+sudo mkarchiso -v "$ISO_BUILD/instantlive"
 
 echo "finished building instantOS installation iso"
