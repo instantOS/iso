@@ -51,12 +51,12 @@ else
     sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist32
 fi
 
-cat ../.cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
+cat "$ISO_BUILD"/.cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
 
 echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>airootfs/root/.zlogin
 
 addpkg() {
-    echo "$1" >>./instantlive/packages.x86_64
+    echo "$1" >>"$ISO_BUILD"/instantlive/packages.x86_64
 }
 
 cd "$ISO_BUILD/instantlive"
