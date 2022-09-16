@@ -51,7 +51,7 @@ else
     sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist32
 fi
 
-cat .cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
+cat ../.cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
 
 echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>airootfs/root/.zlogin
 
