@@ -101,7 +101,7 @@ addpkg grub-instantos
 # syslinux theme
 cd syslinux 
 sed -i 's/Arch/instantOS/g' ./*.cfg
-sed -i 's/^TIMEOUT [0-9]*/TIMEOUT 0/g' ./*.cfg
+sed -i 's/^TIMEOUT [0-9]*/TIMEOUT 100/g' ./*.cfg
 
 # custom menu styling
 cat "$ISO_BUILD/../syslinux/archiso_head.cfg" > ./archiso_head.cfg
