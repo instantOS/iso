@@ -129,8 +129,8 @@ if ! [ -e "$ISO_BUILD/workspace/instantARCH" ]; then
     git clone --depth 1 https://github.com/instantOS/instantARCH "$ISO_BUILD/workspace/instantARCH"
 fi
 
-cat "$ISO_BUILD"/workspace/instantARCH/data/packages/system >> ~/instantlive/packages.x86_64
-cat "$ISO_BUILD"/workspace/instantARCH/data/packages/extra >> ~/instantlive/packages.x86_64
+cat "$ISO_BUILD"/workspace/instantARCH/data/packages/system >> "$ISO_BUILD"/instantlive/packages.x86_64
+cat "$ISO_BUILD"/workspace/instantARCH/data/packages/extra >> "$ISO_BUILD"/instantlive/packages.x86_64
 
 sudo mkarchiso -v "$ISO_BUILD/instantlive"
 
