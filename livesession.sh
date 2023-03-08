@@ -66,7 +66,12 @@ rm /opt/livebuilder
 
 systemctl enable systemd-timesyncd.service
 
+# disable lock screen password for live user
+echo 'export NOILOCKPASSWORD="true"' >> /etc/environment
+
 echo "tzupdate &" >>/root/.zshrc
+
+# start GUI session, for some reason enabling the service in livesession.sh doesn't work
 echo "sleep 2 && systemctl start lightdm" >>/root/.zshrc
 echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>/etc/zsh/zshrc
 
