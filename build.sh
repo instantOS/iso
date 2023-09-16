@@ -80,7 +80,6 @@ addpkg gparted
 addpkg vim
 addpkg xarchiver
 addpkg xterm
-addpkg systemd-swap
 addpkg neofetch
 addpkg pulseaudio
 addpkg netctl
