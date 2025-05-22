@@ -80,7 +80,7 @@ addpkg gparted
 addpkg vim
 addpkg xarchiver
 addpkg xterm
-addpkg neofetch
+addpkg fastfetch
 addpkg pulseaudio
 addpkg netctl
 addpkg alsa-utils
