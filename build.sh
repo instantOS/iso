@@ -81,7 +81,7 @@ addpkg vim
 addpkg xarchiver
 addpkg xterm
 addpkg fastfetch
-addpkg pulseaudio
+addpkg pipewire-pulse
 addpkg netctl
 addpkg alsa-utils
 addpkg tzupdate
