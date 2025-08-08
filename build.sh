@@ -9,57 +9,62 @@ set -eo pipefail
 
 instantinstall archiso
 
-script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 [ "$ISO_BUILD" ] || ISO_BUILD="$script_dir/build"
 echo "iso will be built in $ISO_BUILD"
 
-[ -e "$ISO_BUILD" ] && echo "removing existing iso" && sudo rm -rf "$ISO_BUILD"/ 
+[ -e "$ISO_BUILD" ] && echo "removing existing iso" && sudo rm -rf "$ISO_BUILD"/
 mkdir -p "$ISO_BUILD"
 cd "$ISO_BUILD"
 
 sleep 1
 
-cp -r /usr/share/archiso/configs/releng/ instantlive
+cp -r /usr/share/archiso/configs/releng/ "$ISO_BUILD"/instantlive
 
 mkdir .cache &>/dev/null
-cd .cache 
+cd .cache
 
 if [ -e iso/livesession.sh ]; then
-    cd iso 
+    cd iso
     git pull
-    cd .. 
+    cd ..
 else
     git clone --depth 1 https://github.com/instantOS/iso
 fi
 
-cd "$ISO_BUILD/instantlive"
+addrepo() {
+    cd "$ISO_BUILD/instantlive"
 
-# default is 64 bit repo
-if ! uname -m | grep -q '^i'; then
-    echo "adding 64 bit repo"
+    echo "adding instantOS repo"
     {
         echo "[instant]"
         echo "SigLevel = Optional TrustAll"
         echo "Server = http://packages.instantos.io/"
     } >>pacman.conf
-else
-    {
-        echo "[instant]"
-        echo "SigLevel = Optional TrustAll"
-        echo "Server = http://instantos32.surge.sh"
-    } >>pacman.conf
-    sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist32
-fi
+}
+
+ensurerepo() {
+    REPONAME="$(grep -o '[^/]*$' <<< "$1")"
+    if ! [ -e "$ISO_BUILD/workspace/$REPONAME" ]
+    then
+        [ -e "$ISO_BUILD/workspace/" ] || mkdir -p "$ISO_BUILD/workspace/"
+        git clone --depth 1 "$1" "$ISO_BUILD/workspace/$REPONAME"
+    else
+        cd "$ISO_BUILD/workspace/$REPONAME"
+        git pull
+    fi
+}
 
 cat "$ISO_BUILD"/.cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
 
 echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>airootfs/root/.zlogin
 
 addpkg() {
+    cd "$ISO_BUILD/instantlive"
     echo "$1" >>"$ISO_BUILD"/instantlive/packages.x86_64
 }
 
-cd "$ISO_BUILD/instantlive"
+addrepo
 
 addpkg xorg
 addpkg xorg-drivers
@@ -99,37 +104,31 @@ addpkg os-prober
 addpkg grub-instantos
 
 # syslinux theme
-cd syslinux 
+cd syslinux
 sed -i 's/Arch/instantOS/g' ./*.cfg
 sed -i 's/^TIMEOUT [0-9]*/TIMEOUT 100/g' ./*.cfg
 
 # custom menu styling
-cat "$ISO_BUILD/../syslinux/archiso_head.cfg" > ./archiso_head.cfg
-cat "$ISO_BUILD/../syslinux/archiso_pxe-linux.cfg" > ./archiso_pxe-linux.cfg
-cat "$ISO_BUILD/../syslinux/archiso_sys-linux.cfg" > ./archiso_sys-linux.cfg
+cat "$ISO_BUILD/../syslinux/archiso_head.cfg" >./archiso_head.cfg
+cat "$ISO_BUILD/../syslinux/archiso_pxe-linux.cfg" >./archiso_pxe-linux.cfg
+cat "$ISO_BUILD/../syslinux/archiso_sys-linux.cfg" >./archiso_sys-linux.cfg
 
 rm splash.png
 
-if ! [ -e "$ISO_BUILD/workspace/instantLOGO" ]; then
-    mkdir -p "$ISO_BUILD/workspace"
-    git clone --depth 1 https://github.com/instantOS/instantLOGO "$ISO_BUILD/workspace/instantLOGO"
-fi
+# needed for assets
+ensurerepo https://github.com/instantOS/instantLOGO
 
 cp "$ISO_BUILD/workspace/instantLOGO/png/splash.png" .
 
-cd .. 
+cd ..
 
 # end of syslinux styling
 
-
 # add installer
-if ! [ -e "$ISO_BUILD/workspace/instantARCH" ]; then
-    mkdir -p "$ISO_BUILD/workspace/"
-    git clone --depth 1 https://github.com/instantOS/instantARCH "$ISO_BUILD/workspace/instantARCH"
-fi
+ensurerepo https://github.com/instantOS/instantARCH
 
-cat "$ISO_BUILD"/workspace/instantARCH/data/packages/system >> "$ISO_BUILD"/instantlive/packages.x86_64
-cat "$ISO_BUILD"/workspace/instantARCH/data/packages/extra >> "$ISO_BUILD"/instantlive/packages.x86_64
+cat "$ISO_BUILD"/workspace/instantARCH/data/packages/system >>"$ISO_BUILD"/instantlive/packages.x86_64
+cat "$ISO_BUILD"/workspace/instantARCH/data/packages/extra >>"$ISO_BUILD"/instantlive/packages.x86_64
 
 sudo mkarchiso -v "$ISO_BUILD/instantlive"
 
