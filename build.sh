@@ -20,6 +20,7 @@ cd "$ISO_BUILD"
 sleep 1
 
 cp -r /usr/share/archiso/configs/releng/ "$ISO_BUILD"/instantlive
+cp -r "$SCRIPT_DIR/airootfs" "$ISO_BUILD/instantlive/airootfs"
 
 addrepo() {
     cd "$ISO_BUILD/instantlive"
@@ -30,6 +31,69 @@ addrepo() {
         echo "SigLevel = Optional TrustAll"
         echo "Server = http://packages.instantos.io/"
     } >>pacman.conf
+}
+
+add_instantos_deps() {
+    # add installer
+    ensurerepo https://github.com/instantOS/instantARCH
+    cat "$ISO_BUILD"/workspace/instantARCH/data/packages/system >>"$ISO_BUILD"/instantlive/packages.x86_64
+    cat "$ISO_BUILD"/workspace/instantARCH/data/packages/extra >>"$ISO_BUILD"/instantlive/packages.x86_64
+
+    # avoid duplicate packages in the list
+    SORTEDPACKAGES="$(sort -u "$ISO_BUILD"/instantlive/packages.x86_64)"
+    echo "$SORTEDPACKAGES" >"$ISO_BUILD"/instantlive/packages.x86_64
+
+}
+
+setup_syslinux_styling() {
+    cd "$ISO_BUILD"/syslinux
+    # Increase timeout
+    # TODO: why is this there?
+    sed -i 's/^TIMEOUT [0-9]*/TIMEOUT 100/g' ./*.cfg
+
+    # needed for assets
+    ensurerepo https://github.com/instantOS/instantLOGO
+
+    cp "$ISO_BUILD/workspace/instantLOGO/png/splash.png" "$ISO_BUILD"/instantlive/syslinux/splash.png
+
+}
+
+add_default_deps() {
+    addpkg xorg
+    addpkg xorg-drivers
+    addpkg fzf
+    addpkg expect
+    addpkg git
+    addpkg dialog
+    addpkg wget
+
+    addpkg sudo
+    addpkg lshw
+    addpkg lightdm
+    addpkg bash
+    addpkg mkinitcpio
+    addpkg base
+    addpkg linux
+    addpkg gparted
+    addpkg vim
+    addpkg xarchiver
+    addpkg xterm
+    addpkg fastfetch
+    addpkg pipewire-pulse
+    addpkg netctl
+    addpkg alsa-utils
+    addpkg tzupdate
+    addpkg usbutils
+    addpkg lightdm-gtk-greeter
+    addpkg xdg-desktop-portal-gtk
+
+    addpkg libappindicator-gtk2
+    addpkg libappindicator-gtk3
+
+    addpkg instantos
+    addpkg instantdepend
+    addpkg os-prober
+    addpkg grub-instantos
 }
 
 ensurerepo() {
@@ -43,76 +107,15 @@ ensurerepo() {
     fi
 }
 
-echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >> \
-    "$ISO_BUILD"/instantlive/airootfs/root/.zlogin
-
 addpkg() {
     cd "$ISO_BUILD/instantlive"
     echo "$1" >>"$ISO_BUILD"/instantlive/packages.x86_64
 }
 
 addrepo
-
-addpkg xorg
-addpkg xorg-drivers
-addpkg fzf
-addpkg expect
-addpkg git
-addpkg dialog
-addpkg wget
-
-addpkg sudo
-addpkg lshw
-addpkg lightdm
-addpkg bash
-addpkg mkinitcpio
-addpkg base
-addpkg linux
-addpkg gparted
-addpkg vim
-addpkg xarchiver
-addpkg xterm
-addpkg fastfetch
-addpkg pipewire-pulse
-addpkg netctl
-addpkg alsa-utils
-addpkg tzupdate
-addpkg usbutils
-addpkg lightdm-gtk-greeter
-addpkg xdg-desktop-portal-gtk
-
-addpkg libappindicator-gtk2
-addpkg libappindicator-gtk3
-
-addpkg instantos
-addpkg instantdepend
-addpkg os-prober
-addpkg grub-instantos
-
-# syslinux theme
-cd "$ISO_BUILD"/syslinux
-sed -i 's/^TIMEOUT [0-9]*/TIMEOUT 100/g' ./*.cfg
-
-cp -r "$SCRIPT_DIR/airootfs" "$ISO_BUILD/instantlive/airootfs"
-
-# needed for assets
-ensurerepo https://github.com/instantOS/instantLOGO
-
-cp "$ISO_BUILD/workspace/instantLOGO/png/splash.png" "$ISO_BUILD"/instantlive/syslinux/splash.png
-
-cd ..
-
-# end of syslinux styling
-
-# add installer
-ensurerepo https://github.com/instantOS/instantARCH
-
-cat "$ISO_BUILD"/workspace/instantARCH/data/packages/system >>"$ISO_BUILD"/instantlive/packages.x86_64
-cat "$ISO_BUILD"/workspace/instantARCH/data/packages/extra >>"$ISO_BUILD"/instantlive/packages.x86_64
-
-# avoid duplicate packages in the list
-SORTEDPACKAGES="$(sort -u "$ISO_BUILD"/instantlive/packages.x86_64)"
-echo "$SORTEDPACKAGES" >"$ISO_BUILD"/instantlive/packages.x86_64
+add_default_deps
+add_instantos_deps
+setup_syslinux_styling
 
 sudo mkarchiso -v "$ISO_BUILD/instantlive"
 

@@ -34,6 +34,10 @@ setup_lightdm() {
     sed -i "s/^\[Seat:\*\]/[Seat:*]\nautologin-user=instantos/g" \
         /etc/lightdm/lightdm.conf
 
+    # just in case, also add the autostart here
+    echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >> \
+        /root/.zlogin
+
     # start GUI session using the shell, for some reason enabling the service
     # in livesession.sh doesn't work
     echo "sleep 2 && systemctl start lightdm" >>/root/.zshrc
