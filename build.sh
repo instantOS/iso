@@ -33,6 +33,15 @@ addrepo() {
     } >>pacman.conf
 }
 
+add_liveutils_assets() {
+    ensurerepo https://github.com/instantOS/liveutils
+    mkdir -p "$ISO_BUILD/instantlive/airootfs"/usr/share/liveutils
+    mv "$ISO_BUILD"/workspace/liveutils/wallpaper.png \
+        "$ISO_BUILD/instantlive/airootfs"/usr/share/liveutils/
+    cp "$ISO_BUILD"/workspace/liveutils/assets/*.jpg \
+        "$ISO_BUILD/instantlive/airootfs"/usr/share/liveutils/
+}
+
 add_instantos_deps() {
     # add installer
     ensurerepo https://github.com/instantOS/instantARCH
@@ -116,6 +125,7 @@ addrepo
 add_default_deps
 add_instantos_deps
 setup_syslinux_styling
+add_liveutils_assets
 
 sudo mkarchiso -v "$ISO_BUILD/instantlive"
 
