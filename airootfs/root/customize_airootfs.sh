@@ -39,8 +39,6 @@ git clone --depth 1 https://github.com/instantOS/instantARCH
 git clone --depth 1 https://github.com/instantOS/instantOS
 git clone --depth 1 https://github.com/instantOS/iso
 
-cat iso/issue >/etc/issue
-
 echo "instantOS rootinstall"
 bash instantOS/rootinstall.sh
 
