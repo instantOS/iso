@@ -55,7 +55,7 @@ add_instantos_deps() {
 }
 
 setup_syslinux_styling() {
-    cd "$ISO_BUILD"/syslinux
+    cd "$ISO_BUILD"/instantlive/syslinux
     # Increase timeout
     # TODO: why is this there?
     sed -i 's/^TIMEOUT [0-9]*/TIMEOUT 100/g' ./*.cfg
