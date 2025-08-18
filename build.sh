@@ -127,6 +127,8 @@ add_instantos_deps
 setup_syslinux_styling
 add_liveutils_assets
 
-sudo mkarchiso -v "$ISO_BUILD/instantlive"
+cd "$ISO_BUILD/"
+mkdir "$ISO_BUILD"/iso
+sudo mkarchiso -v "$ISO_BUILD/instantlive" -o "$ISO_BUILD/iso/"
 
 echo "finished building instantOS installation iso"
