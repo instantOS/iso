@@ -22,6 +22,17 @@ sleep 1
 cp -r /usr/share/archiso/configs/releng/ "$ISO_BUILD"/instantlive
 cp -r "$SCRIPT_DIR/airootfs" "$ISO_BUILD/instantlive/airootfs"
 
+ensurerepo() {
+    REPONAME="$(grep -o '[^/]*$' <<<"$1")"
+    if ! [ -e "$ISO_BUILD/workspace/$REPONAME" ]; then
+        [ -e "$ISO_BUILD/workspace/" ] || mkdir -p "$ISO_BUILD/workspace/"
+        git clone --depth 1 "$1" "$ISO_BUILD/workspace/$REPONAME"
+    else
+        cd "$ISO_BUILD/workspace/$REPONAME"
+        git pull
+    fi
+}
+
 addrepo() {
     cd "$ISO_BUILD/instantlive"
 
@@ -105,16 +116,6 @@ add_default_deps() {
     addpkg grub-instantos
 }
 
-ensurerepo() {
-    REPONAME="$(grep -o '[^/]*$' <<<"$1")"
-    if ! [ -e "$ISO_BUILD/workspace/$REPONAME" ]; then
-        [ -e "$ISO_BUILD/workspace/" ] || mkdir -p "$ISO_BUILD/workspace/"
-        git clone --depth 1 "$1" "$ISO_BUILD/workspace/$REPONAME"
-    else
-        cd "$ISO_BUILD/workspace/$REPONAME"
-        git pull
-    fi
-}
 
 addpkg() {
     cd "$ISO_BUILD/instantlive"
