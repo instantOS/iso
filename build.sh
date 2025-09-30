@@ -19,7 +19,7 @@ cd "$ISO_BUILD"
 
 sleep 1
 
-cp -r "$SCRIPT_DIR/releng/releng" "$ISO_BUILD/instantlive"
+cp -r "$SCRIPT_DIR/releng" "$ISO_BUILD/instantlive"
 cp "$SCRIPT_DIR"/syslinux/* "$ISO_BUILD/instantlive/syslinux/"
 
 ensurerepo() {
