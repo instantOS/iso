@@ -127,6 +127,7 @@ xfsprogs
 xl2tpd
 zsh
 # instantOS additions
+acpi
 accountsservice
 bash
 bat
@@ -147,6 +148,8 @@ gnome-font-viewer
 gparted
 granite
 grub-instantos
+network-manager-applet
+networkmanager
 gvfs-mtp
 gvfs-smb
 gxkb
@@ -186,6 +189,7 @@ wqy-microhei
 xarchiver
 xdg-desktop-portal-gtk
 xdg-user-dirs-gtk
+xdotool
 xf86-input-evdev
 xf86-input-synaptics
 xorg
