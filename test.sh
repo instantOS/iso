@@ -24,12 +24,13 @@ LIVEISO="$HOME/Documents/iso/archlinux-2025.11.01-x86_64.iso"
 echo "starting VM..."
 
 
+cd "$TESTDIR"
 qemu-system-x86_64 \
   -enable-kvm \
   -m 4G \
   -cpu host \
   -smp 4 \
-  -drive file=vm-disk.qcow2,format=qcow2,if=virtio \
+  -drive file="$DISKIMG",format=qcow2,if=virtio \
   -cdrom "$LIVEISO" \
   -boot menu=on,order=dc \
   -vga virtio \
