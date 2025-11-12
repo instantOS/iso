@@ -24,13 +24,20 @@ LIVEISO="$HOME/Documents/iso/archlinux-2025.11.01-x86_64.iso"
 echo "starting VM..."
 
 
+if ! [ -e /dev/kvm ] || ! [ -r /dev/kvm ] || ! [ -w /dev/kvm ]; then
+    echo "Error: /dev/kvm is unavailable or lacks read/write permissions. Ensure KVM is enabled and accessible." >&2
+    exit 1
+fi
+
+
 cd "$TESTDIR"
 qemu-system-x86_64 \
   -enable-kvm \
   -m 4G \
   -cpu host \
   -smp 4 \
-  -drive file="$DISKIMG",format=qcow2,if=virtio \
+  -drive file="$DISKIMG",format=qcow2,if=virtio,cache=none,aio=native \
+  -bios /usr/share/edk2-ovmf/x64/OVMF.fd \
   -cdrom "$LIVEISO" \
   -boot menu=on,order=dc \
   -vga virtio \
