@@ -62,6 +62,7 @@ echo 'GRUB_THEME="/usr/share/grub/themes/instantos/theme.txt"' >>/etc/default/gr
 
 rm /opt/livebuilder
 
+# TODO: why is this disabled?
 # systemctl enable lightdm
 
 systemctl enable systemd-timesyncd.service
