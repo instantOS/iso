@@ -9,8 +9,8 @@ set -eo pipefail
 
 instantinstall archiso
 
-script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-[ "$ISO_BUILD" ] || ISO_BUILD="$script_dir/build"
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+[ "$ISO_BUILD" ] || ISO_BUILD="$SCRIPT_DIR/build"
 echo "iso will be built in $ISO_BUILD"
 
 [ -e "$ISO_BUILD" ] && echo "removing existing iso" && sudo rm -rf "$ISO_BUILD"/
@@ -19,112 +19,39 @@ cd "$ISO_BUILD"
 
 sleep 1
 
-cp -r /usr/share/archiso/configs/releng/ instantlive
+cp -r "$SCRIPT_DIR/releng" "$ISO_BUILD/instantlive"
+cp "$SCRIPT_DIR"/syslinux/* "$ISO_BUILD/instantlive/syslinux/"
 
-mkdir .cache &>/dev/null
-cd .cache
-
-if [ -e iso/livesession.sh ]; then
-    cd iso
-    git pull
-    cd ..
-else
-    git clone --depth 1 https://github.com/instantOS/iso
-fi
-
-cd "$ISO_BUILD/instantlive"
-
-addrepo() {
-    cd "$ISO_BUILD/instantlive"
-    {
-        echo "[instant]"
-        echo "SigLevel = Optional TrustAll"
-        echo "Server = http://packages.instantos.io/"
-    } >>pacman.conf
-
-}
-
-addrepo
-
-cat "$ISO_BUILD"/.cache/iso/livesession.sh >>airootfs/root/customize_airootfs.sh
-
-echo "[ -e /opt/lightstart ] || systemctl start lightdm & touch /opt/lightstart" >>airootfs/root/.zlogin
-
-addpkg() {
-    echo "$1" >>"$ISO_BUILD"/instantlive/packages.x86_64
-}
-
-cd "$ISO_BUILD/instantlive"
-
-addpkg xorg
-addpkg xorg-drivers
-addpkg fzf
-addpkg expect
-addpkg git
-addpkg dialog
-addpkg wget
-
-addpkg sudo
-addpkg lshw
-addpkg lightdm
-addpkg bash
-addpkg mkinitcpio
-addpkg base
-addpkg linux
-addpkg gparted
-addpkg vim
-addpkg xarchiver
-addpkg xterm
-addpkg fastfetch
-addpkg pipewire-pulse
-addpkg netctl
-addpkg alsa-utils
-addpkg tzupdate
-addpkg usbutils
-addpkg lightdm-gtk-greeter
-addpkg xdg-desktop-portal-gtk
-
-addpkg libappindicator-gtk2
-addpkg libappindicator-gtk3
-
-addpkg instantos
-addpkg instantdepend
-addpkg liveutils
-addpkg os-prober
-addpkg grub-instantos
-
-# syslinux theme
-cd syslinux
-sed -i 's/Arch/instantOS/g' ./*.cfg
-sed -i 's/^TIMEOUT [0-9]*/TIMEOUT 100/g' ./*.cfg
-
-# custom menu styling
-cat "$ISO_BUILD/../syslinux/archiso_head.cfg" >./archiso_head.cfg
-cat "$ISO_BUILD/../syslinux/archiso_pxe-linux.cfg" >./archiso_pxe-linux.cfg
-cat "$ISO_BUILD/../syslinux/archiso_sys-linux.cfg" >./archiso_sys-linux.cfg
-
-rm splash.png
-
-if ! [ -e "$ISO_BUILD/workspace/instantLOGO" ]; then
+ensurerepo() {
+    local url="$1"
+    local reponame="${url%.git}"
+    reponame="${reponame##*/}"
     mkdir -p "$ISO_BUILD/workspace"
-    git clone --depth 1 https://github.com/instantOS/instantLOGO "$ISO_BUILD/workspace/instantLOGO"
-fi
+    if [[ ! -d "$ISO_BUILD/workspace/$reponame" ]]; then
+        git clone --depth 1 "$url" "$ISO_BUILD/workspace/$reponame"
+    else
+        git -C "$ISO_BUILD/workspace/$reponame" pull --ff-only
+    fi
+}
 
-cp "$ISO_BUILD/workspace/instantLOGO/png/splash.png" .
+add_liveutils_assets() {
+    ensurerepo https://github.com/instantOS/liveutils
+    local src="$ISO_BUILD/workspace/liveutils"
+    local dest="$ISO_BUILD/instantlive/airootfs/usr/share/liveutils"
+    mkdir -p "$dest"
+    rm -f "$dest"/*
+    if [[ -f "$src/wallpaper.png" ]]; then
+        cp "$src"/wallpaper.png "$dest"/
+    fi
+    if compgen -G "$src/assets/*.jpg" >/dev/null; then
+        cp "$src"/assets/*.jpg "$dest"/
+    fi
+}
 
-cd ..
+add_liveutils_assets
 
-# end of syslinux styling
-
-# add installer
-if ! [ -e "$ISO_BUILD/workspace/instantARCH" ]; then
-    mkdir -p "$ISO_BUILD/workspace/"
-    git clone --depth 1 https://github.com/instantOS/instantARCH "$ISO_BUILD/workspace/instantARCH"
-fi
-
-cat "$ISO_BUILD"/workspace/instantARCH/data/packages/system >>"$ISO_BUILD"/instantlive/packages.x86_64
-cat "$ISO_BUILD"/workspace/instantARCH/data/packages/extra >>"$ISO_BUILD"/instantlive/packages.x86_64
-
-sudo mkarchiso -v "$ISO_BUILD/instantlive"
+cd "$ISO_BUILD/"
+mkdir "$ISO_BUILD"/iso
+sudo mkarchiso -v "$ISO_BUILD/instantlive" -o "$ISO_BUILD/iso/"
 
 echo "finished building instantOS installation iso"
